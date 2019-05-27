@@ -55,4 +55,4 @@ node index.js
 # Otherwise, see how your hosting provider handles Node.JS apps. You'll need to edit the HTML in the EJS file and CSS for styling to fit your use case, but the logic is all there.
 ```
 
-#### If you have any questions, feel free to email me at roman@romansorin.com. If needed in the future, I provide hosting services, design, and website/software development at romansorin.com.# plaid-stripe-app
+#### If you have any questions, feel free to email me at roman@romansorin.com. If needed in the future, I provide hosting services, design, and website/software development at romansorin.com
