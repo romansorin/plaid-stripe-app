@@ -13,7 +13,7 @@ var PLAID_SECRET = 'c0e5ad5eb3f4390d9a9f2861f19da7'; // This key comes from 'san
 var PLAID_PUBLIC_KEY = 'af86fdcd156cb43e35a8cd9261333f'; // Public key
 var PLAID_ENV = 'development'; // 'sandbox', 'development', or 'production' - change as needed
 
-var STRIPE_SECRET_KEY = 'sk_live_Xi8aQQNwSlth0hrcF0SqfpvO'; // This is your secret key for stripe. Currently, it is in test (demo) mode, so change it to live when you're ready
+var STRIPE_SECRET_KEY = 'sk_test_7wZvNlCbXQ62yDdUsIpVDVYO'; // This is your secret key for stripe. Currently, it is in test (demo) mode, so change it to live when you're ready
 const stripe = require('stripe')(STRIPE_SECRET_KEY);
 
 
