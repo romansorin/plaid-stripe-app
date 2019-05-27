@@ -52,7 +52,7 @@ stripe.customers.create({
 });
 ```
 
-`views/index.ejs`
+`views/billing.ejs`
 
 ```js
 /* Next, configure as needed:
