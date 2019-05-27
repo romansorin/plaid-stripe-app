@@ -5,29 +5,19 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const plaid = require('plaid');
 const env = require('dotenv').config().parsed;
+const stripe = require('stripe')(env.STRIPE_SECRET_KEY);
 
-var APP_PORT = 3000
-var PLAID_CLIENT_ID = '5ce969b71186c3001245fb73';
-var PLAID_SECRET = 'c0e5ad5eb3f4390d9a9f2861f19da7';
-var PLAID_PUBLIC_KEY = 'af86fdcd156cb43e35a8cd9261333f';
-var PLAID_ENV = 'development';
-
-var STRIPE_SECRET_KEY = 'sk_live_Xi8aQQNwSlth0hrcF0SqfpvO';
-const stripe = require('stripe')(STRIPE_SECRET_KEY);
-// We store the access_token in memory - in production, store it in a secure
-// persistent data store
 var ACCESS_TOKEN = null;
 var PUBLIC_TOKEN = null;
 var ITEM_ID = null;
 var ACCOUNT_ID = null;
 
 // Initialize the Plaid client
-// Find your API keys in the Dashboard (https://dashboard.plaid.com/account/keys)
 const client = new plaid.Client(
-  PLAID_CLIENT_ID,
-  PLAID_SECRET,
-  PLAID_PUBLIC_KEY,
-  plaid.environments.development,
+  env.PLAID_CLIENT_ID,
+  env.PLAID_SECRET,
+  env.PLAID_PUBLIC_KEY,
+  plaid.environments.sandbox,
 );
 
 var app = express();
@@ -38,9 +28,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-// Use when testing locally
-var server = app.listen(APP_PORT, function () {
-  console.log('Server listening on port ' + APP_PORT);
+var server = app.listen(env.APP_PORT, function () {
+  console.log('Server listening on port ' + env.APP_PORT);
 });
 
 var prettyPrintResponse = response => {
@@ -56,14 +45,11 @@ app.get('/', function (req, res) {
 
 app.get('/billing', function (request, response, next) {
   response.render('billing.ejs', {
-    PLAID_PUBLIC_KEY: PLAID_PUBLIC_KEY,
-    PLAID_ENV: PLAID_ENV,
+    PLAID_PUBLIC_KEY: env.PLAID_PUBLIC_KEY,
+    PLAID_ENV: env.PLAID_ENV,
   });
 });
 
-// Exchange token flow - exchange a Link public_token for
-// an API access_token
-// https://plaid.com/docs/#exchange-token-flow
 app.post('/get_access_token', function (request, response, next) {
   PUBLIC_TOKEN = request.body.public_token;
   ACCOUNT_ID = request.body.account_id;
@@ -75,7 +61,7 @@ app.post('/get_access_token', function (request, response, next) {
       });
     }
     ACCESS_TOKEN = tokenResponse.access_token;
-    ITEM_ID = tokenResponse.item_id; // An item refers to the institution or bank
+    ITEM_ID = tokenResponse.item_id;
 
     client.createStripeToken(ACCESS_TOKEN, ACCOUNT_ID, function (err, response) {
       let bankAccountToken = response.stripe_bank_account_token;
@@ -83,10 +69,8 @@ app.post('/get_access_token', function (request, response, next) {
       // This is just a sample method which successfully creates a customer
       // You can modify the fields which are stored automatically, refer to https://stripe.com/docs/api/customers/object
       stripe.customers.create({
-        description: 'Customer created using Stripe + Plaid integration', // Change when you're ready
-        // name: 'John Doe',
-        // email: 'test@test.com',
-        source: bankAccountToken // obtained with Stripe.js
+        description: 'Customer created using Stripe + Plaid integration',
+        source: bankAccountToken
       }, function (err, customer) {
         // async call
       });
@@ -102,8 +86,6 @@ app.post('/get_access_token', function (request, response, next) {
   });
 });
 
-
-// Don't need to touch
 app.post('/set_access_token', function (request, response, next) {
   ACCESS_TOKEN = request.body.access_token;
   client.getItem(ACCESS_TOKEN, function (error, itemResponse) {

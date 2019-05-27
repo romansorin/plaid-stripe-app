@@ -26,16 +26,16 @@ npm install
 
 `.env`
 
-```js
-/* Create a .env (dotenv) file in the root directory (i.e., where you find index.js) and configure the following variables. These ensure your keys are secure and never shared in commits: */
+Create a .env (dotenv) file in the root directory (i.e., where you find index.js) and configure the following variables. These ensure your keys are secure and never shared in commits:
 
-APP_PORT = 3000;
-PLAID_CLIENT_ID = "yourCID";
-PLAID_SECRET = "yourSecretEnvironment";
-PLAID_PUBLIC_KEY = "yourPK";
-PLAID_ENV = "yourEnv"; // Choose between sandbox, development, and production
+```ini
+APP_PORT=3000
+PLAID_CLIENT_ID=yourCID
+PLAID_SECRET=yourSecretEnvironment
+PLAID_PUBLIC_KEY=yourPK
+PLAID_ENV=yourEnv
 
-STRIPE_SECRET_KEY = "yourSK"; // Use this variable regardless of using "test" or "production" API keys.
+STRIPE_SECRET_KEY=yourSK
 ```
 
 `index.js`
