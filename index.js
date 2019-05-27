@@ -5,9 +5,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const plaid = require('plaid');
 const env = require('dotenv').config().parsed;
-const stripe = require('stripe')(env.STRIPE_SECRET_KEY);
 
+var APP_PORT = 3000
+var PLAID_CLIENT_ID = '5ce969b71186c3001245fb73';
+var PLAID_SECRET = 'c0e5ad5eb3f4390d9a9f2861f19da7';
+var PLAID_PUBLIC_KEY = 'af86fdcd156cb43e35a8cd9261333f';
+var PLAID_ENV = 'development';
 
+var STRIPE_SECRET_KEY = 'sk_live_Xi8aQQNwSlth0hrcF0SqfpvO';
+const stripe = require('stripe')(STRIPE_SECRET_KEY);
 // We store the access_token in memory - in production, store it in a secure
 // persistent data store
 var ACCESS_TOKEN = null;
@@ -18,9 +24,9 @@ var ACCOUNT_ID = null;
 // Initialize the Plaid client
 // Find your API keys in the Dashboard (https://dashboard.plaid.com/account/keys)
 const client = new plaid.Client(
-  env.PLAID_CLIENT_ID,
-  env.PLAID_SECRET,
-  env.PLAID_PUBLIC_KEY,
+  PLAID_CLIENT_ID,
+  PLAID_SECRET,
+  PLAID_PUBLIC_KEY,
   plaid.environments.development,
 );
 
@@ -33,8 +39,8 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 // Use when testing locally
-var server = app.listen(env.APP_PORT, function () {
-  console.log('Server listening on port ' + env.APP_PORT);
+var server = app.listen(APP_PORT, function () {
+  console.log('Server listening on port ' + APP_PORT);
 });
 
 var prettyPrintResponse = response => {
@@ -50,8 +56,8 @@ app.get('/', function (req, res) {
 
 app.get('/billing', function (request, response, next) {
   response.render('billing.ejs', {
-    PLAID_PUBLIC_KEY: env.PLAID_PUBLIC_KEY,
-    PLAID_ENV: env.PLAID_ENV,
+    PLAID_PUBLIC_KEY: PLAID_PUBLIC_KEY,
+    PLAID_ENV: PLAID_ENV,
   });
 });
 
