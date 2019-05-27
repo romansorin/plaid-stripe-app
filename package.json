@@ -1,0 +1,20 @@
+{
+  "name": "plaid-stripe-integration",
+  "version": "0.1.0",
+  "description": "Plaid and Stripe integration application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "developers@plaid.com",
+  "repository": "https://github.com/plaid/quickstart",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "1.18.x",
+    "ejs": "2.5.x",
+    "express": "4.16.x",
+    "moment": "2.22.x",
+    "plaid": "3.x.x",
+    "stripe": "^7.1.0"
+  }
+}
