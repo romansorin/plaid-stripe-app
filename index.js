@@ -1,20 +1,11 @@
 'use strict';
 
-var util = require('util');
-
-var express = require('express');
-var bodyParser = require('body-parser');
+const util = require('util');
+const express = require('express');
+const bodyParser = require('body-parser');
 const plaid = require('plaid');
-
-// During production, store this in a more secure .env file or some kind of configuration file
-var APP_PORT = 3000;
-var PLAID_CLIENT_ID = '5ce969b71186c3001245fb73'; // Public client id key
-var PLAID_SECRET = 'c0e5ad5eb3f4390d9a9f2861f19da7'; // This key comes from 'sandbox', 'development', or 'production' secret
-var PLAID_PUBLIC_KEY = 'af86fdcd156cb43e35a8cd9261333f'; // Public key
-var PLAID_ENV = 'development'; // 'sandbox', 'development', or 'production' - change as needed
-
-var STRIPE_SECRET_KEY = 'sk_test_7wZvNlCbXQ62yDdUsIpVDVYO'; // This is your secret key for stripe. Currently, it is in test (demo) mode, so change it to live when you're ready
-const stripe = require('stripe')(STRIPE_SECRET_KEY);
+const env = require('dotenv').config().parsed;
+const stripe = require('stripe')(env.STRIPE_SECRET_KEY);
 
 
 // We store the access_token in memory - in production, store it in a secure
@@ -27,9 +18,9 @@ var ACCOUNT_ID = null;
 // Initialize the Plaid client
 // Find your API keys in the Dashboard (https://dashboard.plaid.com/account/keys)
 const client = new plaid.Client(
-  PLAID_CLIENT_ID,
-  PLAID_SECRET,
-  PLAID_PUBLIC_KEY,
+  env.PLAID_CLIENT_ID,
+  env.PLAID_SECRET,
+  env.PLAID_PUBLIC_KEY,
   plaid.environments.development,
 );
 
@@ -42,8 +33,8 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 // Use when testing locally
-var server = app.listen(APP_PORT, function () {
-  console.log('Server listening on port ' + APP_PORT);
+var server = app.listen(env.APP_PORT, function () {
+  console.log('Server listening on port ' + env.APP_PORT);
 });
 
 var prettyPrintResponse = response => {
@@ -59,8 +50,8 @@ app.get('/', function (req, res) {
 
 app.get('/billing', function (request, response, next) {
   response.render('billing.ejs', {
-    PLAID_PUBLIC_KEY: PLAID_PUBLIC_KEY,
-    PLAID_ENV: PLAID_ENV,
+    PLAID_PUBLIC_KEY: env.PLAID_PUBLIC_KEY,
+    PLAID_ENV: env.PLAID_ENV,
   });
 });
 
@@ -81,7 +72,7 @@ app.post('/get_access_token', function (request, response, next) {
     ITEM_ID = tokenResponse.item_id; // An item refers to the institution or bank
 
     client.createStripeToken(ACCESS_TOKEN, ACCOUNT_ID, function (err, response) {
-      var bankAccountToken = response.stripe_bank_account_token;
+      let bankAccountToken = response.stripe_bank_account_token;
 
       // This is just a sample method which successfully creates a customer
       // You can modify the fields which are stored automatically, refer to https://stripe.com/docs/api/customers/object

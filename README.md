@@ -1,28 +1,44 @@
-### Plaid-Stripe integration
+# Plaid-Stripe integration
 
-[Plaid Docs](https://plaid.com/docs/stripe/)
-[Stripe Docs](https://stripe.com/docs/ach#using-plaid)
+#### Stripe resources
 
+[Stripe Docs](https://stripe.com/docs/ach#using-plaid),
+[Stripe Keys](https://dashboard.stripe.com/developers)
+
+#### Plaid resources
+
+[Plaid Docs](https://plaid.com/docs/stripe/),
 [Plaid Keys](https://dashboard.plaid.com/account/keys)
-[Stripe Docs](https://dashboard.stripe.com/developers)
 
-``` bash
-# Unzip or upload the files found in plaid-stripe.zip
-cd plaid-stripe
+---
+
+## Configuration
+
+`.env`
+
+```bash
+git clone https://github.com/romansorin/plaid-stripe-app.git
+cd plaid-stripe-app
+
+# Install all necessary dependencies, these can be found in package.json
 npm install
 ```
 
-``` node
-/* Go to index.js, run through comments and find what you want to configure.
-   During production, store this in a more secure .env file or some kind of configuration file */
-var APP_PORT = 8000;
-var PLAID_CLIENT_ID = '5ce969b71186c3001245fb73'; // Public client id key
-var PLAID_SECRET = 'b81f18309baf5d3bc4a446c6d56e9c'; // This key comes from 'sandbox', 'development', or 'production' secret
-var PLAID_PUBLIC_KEY = 'af86fdcd156cb43e35a8cd9261333f'; // Public key
-var PLAID_ENV = 'sandbox'; // 'sandbox', 'development', or 'production' - change as needed
+`index.js`
 
-var STRIPE_SECRET_KEY = 'sk_test_7wZvNlCbXQ62yDdUsIpVDVYO'; // This is your secret key for stripe. Currently, it is in test (demo) mode, so change it to live when you're ready
-const stripe = require('stripe')(STRIPE_SECRET_KEY);
+```js
+/* Create a .env (dotenv) file in the root directory (i.e., where you find index.js) and configure the following variables. These ensure your keys are secure and never shared in commits: */
+
+APP_PORT = 3000;
+PLAID_CLIENT_ID = "yourCID";
+PLAID_SECRET = "yourSecretEnvironment";
+PLAID_PUBLIC_KEY = "yourPK";
+PLAID_ENV = "yourEnv"; // Choose between sandbox, development, and production
+
+STRIPE_SECRET_KEY = "yourSK"; // Use this variable regardless of using "test" or "production" API keys.
+```
+
+```js
 
 /* You'll also want to take a look at the method for creating Stripe customers, and configure
    as needed.
@@ -38,7 +54,7 @@ const stripe = require('stripe')(STRIPE_SECRET_KEY);
       }, function (err, customer) {
         // async call
       });
-/* 
+/*
 ------------
 Next take a look at views/index.ejs and find the following code segment, configure as needed:
 */
@@ -47,7 +63,7 @@ clientName: 'Stripe + Plaid Test', // Change this to "Hunt Media" or whatever yo
 key: 'af86fdcd156cb43e35a8cd9261333f' // This is your Plaid PUBLIC KEY
 ```
 
-``` bash
+```bash
 # If running or testing locally, type in console:
 node index.js
 # Go to http://localhost:8000
