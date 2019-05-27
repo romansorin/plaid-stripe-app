@@ -9,9 +9,9 @@ const plaid = require('plaid');
 // During production, store this in a more secure .env file or some kind of configuration file
 var APP_PORT = 3000;
 var PLAID_CLIENT_ID = '5ce969b71186c3001245fb73'; // Public client id key
-var PLAID_SECRET = 'a97180348f90c8cff395b5d89e68c8'; // This key comes from 'sandbox', 'development', or 'production' secret
+var PLAID_SECRET = 'c0e5ad5eb3f4390d9a9f2861f19da7'; // This key comes from 'sandbox', 'development', or 'production' secret
 var PLAID_PUBLIC_KEY = 'af86fdcd156cb43e35a8cd9261333f'; // Public key
-var PLAID_ENV = 'production'; // 'sandbox', 'development', or 'production' - change as needed
+var PLAID_ENV = 'development'; // 'sandbox', 'development', or 'production' - change as needed
 
 var STRIPE_SECRET_KEY = 'sk_live_Xi8aQQNwSlth0hrcF0SqfpvO'; // This is your secret key for stripe. Currently, it is in test (demo) mode, so change it to live when you're ready
 const stripe = require('stripe')(STRIPE_SECRET_KEY);
@@ -30,7 +30,7 @@ const client = new plaid.Client(
   PLAID_CLIENT_ID,
   PLAID_SECRET,
   PLAID_PUBLIC_KEY,
-  plaid.environments.production,
+  plaid.environments.development,
 );
 
 var app = express();
