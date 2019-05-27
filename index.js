@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var plaid = require('plaid');
 
 // During production, store this in a more secure .env file or some kind of configuration file
-var APP_PORT = 8000;
+var APP_PORT = 3000;
 var PLAID_CLIENT_ID = '5ce969b71186c3001245fb73'; // Public client id key
 var PLAID_SECRET = 'b81f18309baf5d3bc4a446c6d56e9c'; // This key comes from 'sandbox', 'development', or 'production' secret
 var PLAID_PUBLIC_KEY = 'af86fdcd156cb43e35a8cd9261333f'; // Public key
@@ -41,8 +41,24 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-app.get('/', function (request, response, next) {
-  response.render('index.ejs', {
+// Use when testing locally
+var server = app.listen(APP_PORT, function () {
+  console.log('Server listening on port ' + APP_PORT);
+});
+
+var prettyPrintResponse = response => {
+  console.log(util.inspect(response, {
+    colors: true,
+    depth: 4
+  }));
+};
+
+app.get('/', function (req, res) {
+  res.render('index.ejs');
+});
+
+app.get('/billing', function (request, response, next) {
+  response.render('billing.ejs', {
     PLAID_PUBLIC_KEY: PLAID_PUBLIC_KEY,
     PLAID_ENV: PLAID_ENV,
   });
@@ -89,17 +105,6 @@ app.post('/get_access_token', function (request, response, next) {
   });
 });
 
-// Use when testing locally
-var server = app.listen(APP_PORT, function () {
-  console.log('plaid server listening on port ' + APP_PORT);
-});
-
-var prettyPrintResponse = response => {
-  console.log(util.inspect(response, {
-    colors: true,
-    depth: 4
-  }));
-};
 
 // Don't need to touch
 app.post('/set_access_token', function (request, response, next) {

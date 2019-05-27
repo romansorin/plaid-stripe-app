@@ -2,118 +2,19 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>Plaid + Stripe Integration</title>
-  <link rel="stylesheet" href="https://threads.plaid.com/threads.css">
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://threads.plaid.com/threads.css">
 
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
-  <main class="main">
-    <div class="grid">
-      <div class="grid__column grid__column--is-twelve-columns">
-        <div id="banner" class="everpresent-content">
-          <h1 class="everpresent-content__heading">Plaid</h1>
-          <p id="intro" class="everpresent-content__subheading">
-            Stripe + Plaid integration
-          </p>
-          <p id="steps" class="everpresent-content__subheading">
-            Success! You just created an Item by linking your account.
-          </p>
-        </div>
+    <main class="main">
+        <h1>Testing routing</h1>
+    </main>
 
-        <div id="container" class="initial-view">
-          <p class="initial-view__description">
-            Click the button below to open a list of Institutions. After you select one, you’ll be guided through an
-            authentication process. Upon completion, a public_token will be passed back to the server and exchanged for
-            access_token.
-          </p>
-
-          <button id="link-btn" class="button button--is-primary">Connect with Plaid</button>
-        </div>
-
-        <div id="app" class="connected-view">
-          <div class="item-overview">
-            <div class="item-overview__column">
-              <h3 class="item-overview__heading">item_id</h3>
-              <p class="item-overview__id" id="item_id">san.asjsansakjsakjasjksajkas</p>
-            </div>
-            <div class="item-overview__column">
-              <h3 class="item-overview__heading">access_token</h3>
-              <p class="item-overview__id" id="access_token">••••••••hsakjsl</p>
-            </div>
-
-            <div style="clear: both"></div>
-          </div>
-
-
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
-  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
-  <script>
-    (function ($) {
-      var handler = Plaid.create({
-        env: 'sandbox', // Change to 'production' when it is live on your site
-        clientName: 'Stripe + Plaid Test', // Change this to "Hunt Media" or whatever you want
-        key: 'af86fdcd156cb43e35a8cd9261333f', // This is your Plaid PUBLIC KEY
-        product: ['auth'],
-        selectAccount: true,
-        onSuccess: function (public_token, metadata) {
-          $.post('/get_access_token', {
-            public_token: public_token,
-            account_id: metadata.account_id
-          }, function (data) {
-            $('#container').fadeOut('fast', function () {
-              $('#item_id').text(data.item_id);
-              $('#access_token').text(data.access_token);
-              $('#intro').hide();
-              $('#app, #steps').fadeIn('slow');
-            });
-          });
-        },
-      });
-      var accessToken = qs('access_token');
-      if (accessToken != null && accessToken != '') {
-        $.post('/set_access_token', {
-          access_token: accessToken
-        }, function (data) {
-          $('#container').fadeOut('fast', function () {
-            $('#item_id').text(data.item_id);
-            $('#access_token').text(accessToken);
-            $('#intro').hide();
-            $('#app, #steps').fadeIn('slow');
-          });
-        });
-      }
-
-      $('#link-btn').on('click', function (e) {
-        handler.open();
-      });
-    })(jQuery);
-
-    function qs(key) {
-      key = key.replace(/[*+?^$.\[\]{}()|\\\/]/g, "\\$&"); // escape RegEx meta chars
-      var match = location.search.match(new RegExp("[?&]" + key + "=([^&]+)(&|$)"));
-      return match && decodeURIComponent(match[1].replace(/\+/g, " "));
-    }
-
-    function displayError(element, error) {
-      var html = `
-    <div class="alert alert-danger">
-      <p><strong>Error Code:</strong> ${error.error_code}</p>
-      <p><strong>Error Type:</strong> ${error.error_type}</p>
-      <p><strong>Error Message:</strong> ${error.display_message == null ? error.error_message : error.display_message}</p>
-      <div>Check out our <a href="https://plaid.com/docs/#errors-overview">errors documentation</a> for more information.</div>
-    </div>`;
-      $(element).html(html).slideDown();
-    }
-  </script>
 </body>
 
 </html>
